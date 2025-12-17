@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>com.example</groupId>
-    <artifactId>msa-auth</artifactId>
+    <artifactId>sessac-auth</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>msa-auth</name>
-    <description>Auth service (JWT) for partial MSA</description>
+    <name>sessac-auth</name>
+    <description>Auth service (JWT) for sessac-auth</description>
 
     <properties>
         <java.version>17</java.version>

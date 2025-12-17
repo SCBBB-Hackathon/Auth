@@ -3,15 +3,15 @@ server:
 
 spring:
   application:
-    name: msa-auth
+    name: sessac-auth
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/auth_db}
-    username: ${SPRING_DATASOURCE_USERNAME:root}
-    password: ${SPRING_DATASOURCE_PASSWORD:password}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/auth_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${SPRING_DATASOURCE_USERNAME:auth_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:${MYSQL_PASSWORD:}}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
