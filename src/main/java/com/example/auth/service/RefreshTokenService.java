@@ -1,7 +1,7 @@
 package com.example.auth.service;
 
-import com.example.auth.user.User;
-import com.example.auth.user.UserRepository;
+import com.example.auth.entity.User;
+import com.example.auth.repository.UserRepository;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;

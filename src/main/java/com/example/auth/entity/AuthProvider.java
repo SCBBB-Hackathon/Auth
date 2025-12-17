@@ -1,4 +1,4 @@
-package com.example.auth.user;
+package com.example.auth.entity;
 
 // OAuth provider 구분 값.
 public enum AuthProvider {

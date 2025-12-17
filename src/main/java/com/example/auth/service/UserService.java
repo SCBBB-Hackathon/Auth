@@ -1,8 +1,8 @@
 package com.example.auth.service;
 
-import com.example.auth.social.SocialUserProfile;
-import com.example.auth.user.User;
-import com.example.auth.user.UserRepository;
+import com.example.auth.client.social.SocialUserProfile;
+import com.example.auth.entity.User;
+import com.example.auth.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

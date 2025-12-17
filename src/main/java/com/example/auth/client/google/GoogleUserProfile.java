@@ -1,7 +1,7 @@
-package com.example.auth.google;
+package com.example.auth.client.google;
 
-import com.example.auth.social.SocialUserProfile;
-import com.example.auth.user.AuthProvider;
+import com.example.auth.client.social.SocialUserProfile;
+import com.example.auth.entity.AuthProvider;
 
 // 구글 ID 토큰에서 추출한 최소 사용자 정보.
 public record GoogleUserProfile(

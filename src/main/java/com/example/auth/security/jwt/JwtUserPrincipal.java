@@ -1,4 +1,4 @@
-package com.example.auth.jwt;
+package com.example.auth.security.jwt;
 
 import java.util.Collection;
 import java.util.Collections;
