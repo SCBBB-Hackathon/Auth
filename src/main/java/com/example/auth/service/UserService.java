@@ -1,7 +1,6 @@
 package com.example.auth.service;
 
-import com.example.auth.google.GoogleUserProfile;
-import com.example.auth.user.AuthProvider;
+import com.example.auth.social.SocialUserProfile;
 import com.example.auth.user.User;
 import com.example.auth.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -18,15 +17,15 @@ public class UserService {
     }
 
     @Transactional
-    public User upsertGoogleUser(GoogleUserProfile profile) {
+    public User upsertSocialUser(SocialUserProfile profile) {
         return userRepository
-            .findByProviderAndProviderId(AuthProvider.GOOGLE, profile.sub())
+            .findByProviderAndProviderId(profile.provider(), profile.providerId())
             .map(existing -> {
                 existing.updateProfile(profile.name(), profile.email());
                 return existing;
             })
             .orElseGet(() -> userRepository.save(
-                new User(AuthProvider.GOOGLE, profile.sub(), profile.email(), profile.name())
+                new User(profile.provider(), profile.providerId(), profile.email(), profile.name())
             ));
     }
 }

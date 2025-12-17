@@ -25,7 +25,7 @@ spring:
 auth:
   jwt:
     # 실서비스에서는 32바이트 이상 강력한 비밀키를 외부 설정/시크릿으로 주입해야 합니다.
-    secret: "1234567890"
+    secret: ${AUTH_JWT_SECRET:change-me-please-change-me-please-change-me}
     access-validity-seconds: 3600
     refresh-validity-seconds: 604800 # 7 days
 

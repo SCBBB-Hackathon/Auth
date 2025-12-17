@@ -65,7 +65,7 @@ public class AuthController {
     // 모바일 서버가 보내는 구글 인가 코드를 받아 우리 JWT로 교환한다.
     public AuthResponse issueTokenFromGoogleCode(@Valid @RequestBody GoogleAuthCodeRequest request) {
         GoogleUserProfile profile = googleOAuthClient.exchangeAuthCode(request.code(), request.redirectUri());
-        User user = userService.upsertGoogleUser(profile);
+        User user = userService.upsertSocialUser(profile);
         JwtUserPrincipal principal = principalOf(user);
         String token = jwtTokenProvider.createAccessToken(principal);
         String refreshToken = refreshTokenService.issue(user);
