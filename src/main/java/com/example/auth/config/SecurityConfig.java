@@ -1,12 +1,14 @@
 package com.example.auth.config;
 
 import com.example.auth.security.jwt.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -25,10 +27,19 @@ public class SecurityConfig {
         http
             // JWT로 인증하므로 CSRF는 비활성화.
             .csrf(csrf -> csrf.disable())
+            // 브라우저 로그인 폼/Basic 인증은 사용하지 않는 API.
+            .formLogin(AbstractHttpConfigurer::disable)
+            .httpBasic(AbstractHttpConfigurer::disable)
             // 기본 CORS 설정 사용.
             .cors(Customizer.withDefaults())
             // 세션을 사용하지 않는 stateless API 구성.
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            // 인증 실패(토큰 없음/유효하지 않음)는 401로 통일.
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) ->
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                )
+            )
             // swagger, 토큰 발급, 헬스체크는 무인증으로 허용.
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
