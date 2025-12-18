@@ -16,7 +16,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -82,5 +85,20 @@ class AuthControllerSecurityTest {
             .andExpect(jsonPath("$.nationality").value("KR"))
             .andExpect(jsonPath("$.providerId").value("provider-id"));
     }
-}
 
+    @Test
+    @DisplayName("유효한 Bearer 토큰이면 /api/auth/logout 은 204를 반환하고 AuthService.logout을 호출한다")
+    void logout_withValidToken_returns204() throws Exception {
+        String token = "valid-token";
+        JwtUserPrincipal principal = new JwtUserPrincipal(1L, "Jess", "KR", "provider-id");
+
+        given(jwtTokenProvider.validateToken(token)).willReturn(true);
+        given(jwtTokenProvider.getPrincipal(token)).willReturn(principal);
+
+        mockMvc.perform(post("/api/auth/logout")
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isNoContent());
+
+        then(authService).should(times(1)).logout(principal);
+    }
+}

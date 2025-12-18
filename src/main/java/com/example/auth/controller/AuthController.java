@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -54,5 +56,12 @@ public class AuthController {
     // 인증된 사용자의 정보를 JWT에서 꺼내 반환한다.
     public UserInfoResponse me(@AuthenticationPrincipal JwtUserPrincipal principal) {
         return authService.me(principal);
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    // 해당 사용자에 대한 모든 세션(리프레시 토큰)을 무효화한다.
+    public void logout(@AuthenticationPrincipal JwtUserPrincipal principal) {
+        authService.logout(principal);
     }
 }

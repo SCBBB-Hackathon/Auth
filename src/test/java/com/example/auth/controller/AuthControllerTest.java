@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // @AutoConfigureMockMvc:
 // - MockMvc(가짜 HTTP 클라이언트)를 자동 구성한다.
 // - addFilters=false로 Spring Security 필터체인을 끄면 인증/인가에 막히지 않고 컨트롤러 동작만 테스트할 수 있다.
-@AutoConfigureMockMvc(addFilters = true)
+@AutoConfigureMockMvc(addFilters = false)
 class AuthControllerTest {
 
     // @Autowired:

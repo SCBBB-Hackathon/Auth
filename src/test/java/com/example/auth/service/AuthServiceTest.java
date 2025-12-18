@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.times;
 
 /**
  * "순수 JUnit + Mockito" 단위 테스트 예시:
@@ -123,5 +124,25 @@ class AuthServiceTest {
         UserInfoResponse response = authService.me(null);
         assertThat(response).isNull();
     }
-}
 
+    @Test
+    @DisplayName("logout: 유저 토큰 버전을 올려 모든 세션을 무효화한다")
+    void logout_revokesAllSessions() {
+        JwtUserPrincipal principal = new JwtUserPrincipal(1L, "Jess", "KR", "provider-id");
+
+        authService.logout(principal);
+
+        then(refreshTokenService).should(times(1)).revokeAll(1L);
+    }
+
+    @Test
+    @DisplayName("logout: principal 또는 userId가 없으면 UnauthorizedException")
+    void logout_requiresAuthenticatedUser() {
+        assertThatThrownBy(() -> authService.logout(null))
+            .isInstanceOf(UnauthorizedException.class);
+
+        JwtUserPrincipal noUserId = new JwtUserPrincipal(null, "Jess", "KR", "provider-id");
+        assertThatThrownBy(() -> authService.logout(noUserId))
+            .isInstanceOf(UnauthorizedException.class);
+    }
+}

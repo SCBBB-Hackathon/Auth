@@ -69,6 +69,13 @@ public class AuthService {
         return new UserInfoResponse(principal.userId(), principal.name(), principal.nationality(), principal.providerId());
     }
 
+    public void logout(JwtUserPrincipal principal) {
+        if (principal == null || principal.userId() == null) {
+            throw new UnauthorizedException("Unauthenticated");
+        }
+        refreshTokenService.revokeAll(principal.userId());
+    }
+
     private JwtUserPrincipal principalOf(User user) {
         return new JwtUserPrincipal(
             user.getId(),
