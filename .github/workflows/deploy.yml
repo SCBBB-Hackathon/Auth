@@ -3,7 +3,7 @@ name: Build and Push to ECR (Git Tag)
 on:
   push:
     tags:
-      - "v0.0.1"           # v1.0.0, v1.2.3 등 태그 push 시만 실행
+      - "v0.0.2"           # v1.0.0, v1.2.3 등 태그 push 시만 실행
   workflow_dispatch:   # 필요하면 수동 실행도 가능
 
 
