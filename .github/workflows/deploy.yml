@@ -12,6 +12,10 @@ env:
   ECR_REPOSITORY: sessac-auth               # ECR 리포 이름
   IMAGE_TAG: ${{ github.sha }}              # 커밋 SHA로 태그
 
+permissions:
+  id-token: write      # OIDC로 STS AssumeRole 사용
+  contents: read       # repo checkout
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
