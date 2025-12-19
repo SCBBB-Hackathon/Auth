@@ -1,0 +1,64 @@
+name: Build and Push to ECR (Git Tag)
+
+on:
+  push:
+    tags:
+      - "v0.0.1"           # v1.0.0, v1.2.3 등 태그 push 시만 실행
+  workflow_dispatch:   # 필요하면 수동 실행도 가능
+
+
+env:
+  AWS_REGION: ap-northeast-2               # 필요 시 수정
+  ECR_REPOSITORY: sessac-auth               # ECR 리포 이름
+  IMAGE_TAG: ${{ github.sha }}              # 커밋 SHA로 태그
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) 소스 체크아웃
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2) JDK 17 + Maven 캐시
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      # 3) 테스트
+      - name: Run tests
+        run: mvn test
+
+      # 4) AWS 자격 설정 (OIDC 역할 필요)
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_OIDC_ROLE_ARN }}   # OIDC로 가정
+          aws-region: ${{ env.AWS_REGION }}
+
+      # 5) ECR 로그인
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 6) Docker Build & Push (amd64로 빌드, latest + SHA 태그)
+      - name: Build and Push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          IMAGE_URI="$ECR_REGISTRY/${{ env.ECR_REPOSITORY }}"
+          docker buildx build \
+            --platform linux/amd64 \
+            -t "$IMAGE_URI:latest" \
+            -t "$IMAGE_URI:${{ env.IMAGE_TAG }}" \
+            --push .
+
+      # 7) (임시) 배포는 수동으로 실행
+      #    - 이 워크플로우는 ECR push까지만 수행합니다.
+      #    - 배포는 SSH/SSM 등으로 별도 실행해주세요.
+      - name: Skip deploy (manual step required)
+        run: echo "Deploy step skipped. ECR push completed."

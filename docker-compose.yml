@@ -1,4 +1,23 @@
 services:
+  auth:
+    build: .
+    container_name: sessac-auth-app
+    restart: unless-stopped
+    environment:
+      AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/auth_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER:-auth_user}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
   mysql:
     image: mysql:8.0
     container_name: sessac-auth-mysql
