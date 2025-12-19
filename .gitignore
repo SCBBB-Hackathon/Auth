@@ -17,3 +17,7 @@ out/
 
 # Logs
 *.log
+
+# Kubernetes local manifests (do not commit secrets/config)
+k8s/secret.yaml
+k8s/configmap.yaml
