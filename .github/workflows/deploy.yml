@@ -9,7 +9,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2               # 필요 시 수정
-  ECR_REPOSITORY: sessac-auth               # ECR 리포 이름
+  ECR_REPOSITORY: sessac/auth               # ECR 리포 이름
   IMAGE_TAG: ${{ github.sha }}              # 커밋 SHA로 태그
 
 permissions:
