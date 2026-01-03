@@ -18,7 +18,7 @@ spec:
         - name: ecr-cred
       containers:
         - name: auth
-          image: 863355752250.dkr.ecr.ap-northeast-2.amazonaws.com/sessac-auth:latest
+          image: 863355752250.dkr.ecr.ap-northeast-2.amazonaws.com/sessac/auth:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
